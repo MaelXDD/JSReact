@@ -5,8 +5,8 @@
 // ─────────────────────────────────────────────────────────
 import { useEffect, useState } from 'react'
 import { FiPlus, FiEdit2, FiTrash2, FiLoader, FiX } from 'react-icons/fi'
-import { supabase } from '../lib/supabaseClient'
-
+import { getProductos, crearProducto, actualizarProducto, eliminarProducto } from '../repositories/productosRepository'
+import { getCategorias } from '../repositories/categoriasRepository'
 const EMPTY_FORM = {
   nombre: '', descripcion: '', precio: '', stock: '',
   marca: '', imagen_url: '', categoria_id: ''
@@ -23,19 +23,16 @@ export default function AdminPage() {
   // ── READ ──────────────────────────────────────────────
   async function loadProducts() {
     setLoading(true)
-    const { data } = await supabase
-      .from('productos')
-      .select('*, categorias(nombre)')
-      .order('id', { ascending: false })
-    setProducts(data ?? [])
+    const data = await getProductos()
+    setProducts(data)
     setLoading(false)
   }
 
   useEffect(() => {
     async function init() {
       await loadProducts()
-      const { data: cats } = await supabase.from('categorias').select('id, nombre').order('nombre')
-      setCategories(cats ?? [])
+      const cats = await getCategorias()
+      setCategories(cats)
     }
     init()
   }, [])
@@ -72,16 +69,9 @@ export default function AdminPage() {
       }
 
       if (modal === 'create') {
-        // INSERT
-        const { error } = await supabase.from('productos').insert(payload)
-        if (error) throw error
+        await crearProducto(payload)
       } else {
-        // UPDATE
-        const { error } = await supabase
-          .from('productos')
-          .update(payload)
-          .eq('id', modal.id)
-        if (error) throw error
+        await actualizarProducto(modal.id, payload)
       }
 
       setModal(false)
@@ -94,12 +84,15 @@ export default function AdminPage() {
   }
 
   // ── DELETE ────────────────────────────────────────────
-  async function handleDelete(id) {
-    if (!window.confirm('¿Eliminar este producto?')) return
-    const { error } = await supabase.from('productos').delete().eq('id', id)
-    if (error) { alert('Error: ' + error.message); return }
+async function handleDelete(id) {
+  if (!window.confirm('¿Eliminar este producto?')) return
+  try {
+    await eliminarProducto(id)
     await loadProducts()
+  } catch (err) {
+    alert('Error: ' + err.message)
   }
+}
 
   function onChange(e) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))

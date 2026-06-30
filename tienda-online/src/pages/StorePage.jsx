@@ -5,10 +5,13 @@
 // ─────────────────────────────────────────────────────────
 import { useEffect, useState } from 'react'
 import { FiSearch, FiLoader } from 'react-icons/fi'
-import { supabase } from '../lib/supabaseClient'
+import { getProductos } from '../repositories/productosRepository'
+import { getCategorias } from '../repositories/categoriasRepository'
 import ProductCard from '../components/client/ProductCard'
 
 export default function StorePage() {
+  /** @type {import('../domain/entities').Producto} */
+  const productoEjemplo = {}
   const [products,   setProducts]   = useState([])
   const [categories, setCategories] = useState([])
   const [search,     setSearch]     = useState('')
@@ -19,24 +22,12 @@ export default function StorePage() {
   useEffect(() => {
     async function loadData() {
       setLoading(true)
-
-      // Carga categorías
-      const { data: cats } = await supabase
-        .from('categorias')
-        .select('id, nombre')
-        .order('nombre')
-      setCategories(cats ?? [])
-
-      // Carga productos con nombre de categoría
-      const { data: prods, error } = await supabase
-        .from('productos')
-        .select(`
-          id, nombre, descripcion, precio, stock, marca, imagen_url,
-          categorias ( nombre )
-        `)
-        .order('nombre')
-
-      if (!error) setProducts(prods ?? [])
+      const [prods, cats] = await Promise.all([
+        getProductos(),
+        getCategorias(),
+      ])
+      setProducts(prods)
+      setCategories(cats)
       setLoading(false)
     }
     loadData()

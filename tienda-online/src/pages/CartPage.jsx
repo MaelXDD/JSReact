@@ -8,8 +8,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiTrash2, FiArrowLeft, FiShoppingBag, FiCheck } from 'react-icons/fi'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
-import { supabase } from '../lib/supabaseClient'
-
+import { crearVenta } from '../repositories/ventasRepository'
+import { crearDetalleVentas } from '../repositories/detalleVentasRepository'
+import { actualizarStock } from '../repositories/productosRepository'
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart, totalItems, totalPrice } = useCart()
   const { profile } = useAuth()
@@ -17,60 +18,45 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  async function handleCheckout() {
-    if (items.length === 0) return
-    setLoading(true)
-    try {
-      // Número de orden único
-      const numero_orden = `ORD-${Date.now()}`
+    async function handleCheckout() {
+        if (items.length === 0) return
+        setLoading(true)
+        try {
+            const numero_orden = `ORD-${Date.now()}`
 
-      // 1. INSERT en `ventas` ──────────────────────────
-      const { data: venta, error: ventaError } = await supabase
-        .from('ventas')
-        .insert({
-          fecha:          new Date().toISOString(),
-          total:          totalPrice,
-          cantidad_items: totalItems,
-          usuario_id:     profile.id,
-          numero_orden,
-        })
-        .select()
-        .single()
+            // 1. Crear venta
+            const venta = await crearVenta({
+                fecha:          new Date().toISOString(),
+                total:          totalPrice,
+                cantidad_items: totalItems,
+                usuario_id:     profile.id,
+                numero_orden,
+            })
 
-      if (ventaError) throw ventaError
+            // 2. Crear detalle de venta (bulk)
+            const detalles = items.map(item => ({
+                venta_id:        venta.id,
+                producto_id:     item.id,
+                cantidad:        item.qty,
+                precio_unitario: item.precio,
+                subtotal:        item.precio * item.qty,
+            }))
+            await crearDetalleVentas(detalles)
 
-      // 2. INSERT en `detalle_ventas` (bulk) ───────────
-      const detalles = items.map(item => ({
-        venta_id:       venta.id,
-        producto_id:    item.id,
-        cantidad:       item.qty,
-        precio_unitario: item.precio,
-        subtotal:       item.precio * item.qty,
-      }))
+            // 3. Reducir stock de cada producto
+            for (const item of items) {
+                await actualizarStock(item.id, item.stock - item.qty)
+            }
 
-      const { error: detalleError } = await supabase
-        .from('detalle_ventas')
-        .insert(detalles)
-
-      if (detalleError) throw detalleError
-
-      // 3. Reducir stock de cada producto ───────────────
-      for (const item of items) {
-        await supabase
-          .from('productos')
-          .update({ stock: item.stock - item.qty })
-          .eq('id', item.id)
-      }
-
-      clearCart()
-      setSuccess(true)
-      setTimeout(() => navigate('/'), 3000)
-    } catch (err) {
-      alert('Error al procesar la compra: ' + err.message)
-    } finally {
-      setLoading(false)
+            clearCart()
+            setSuccess(true)
+            setTimeout(() => navigate('/'), 3000)
+        } catch (err) {
+            alert('Error al procesar la compra: ' + err.message)
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
   if (success) {
     return (

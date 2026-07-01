@@ -1,12 +1,3 @@
-// src/contexts/AuthContext.jsx
-// ─────────────────────────────────────────────────────────
-// Maneja la sesión de Supabase Auth y expone:
-//   - user      → objeto de usuario de Supabase Auth
-//   - profile   → fila de la tabla `usuarios` (con el rol)
-//   - isAdmin   → booleano derivado del rol
-//   - loading   → mientras se resuelve la sesión inicial
-//   - login / logout
-// ─────────────────────────────────────────────────────────
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 

@@ -1,4 +1,3 @@
-// src/pages/RegisterPage.jsx
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { FiPackage, FiAlertCircle } from 'react-icons/fi'

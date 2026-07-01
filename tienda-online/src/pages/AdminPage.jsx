@@ -1,8 +1,3 @@
-// src/pages/AdminPage.jsx
-// ─────────────────────────────────────────────────────────
-// Panel de administración: CRUD completo de productos.
-// SELECT, INSERT, UPDATE y DELETE directo en Supabase.
-// ─────────────────────────────────────────────────────────
 import { useEffect, useState } from 'react'
 import { FiPlus, FiEdit2, FiTrash2, FiLoader, FiX } from 'react-icons/fi'
 import { getProductos, crearProducto, actualizarProducto, eliminarProducto } from '../repositories/productosRepository'

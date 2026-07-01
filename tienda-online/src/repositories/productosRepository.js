@@ -1,7 +1,3 @@
-// src/repositories/productosRepository.js
-// ─────────────────────────────────────────────────────────
-// Encapsula el acceso a la tabla "productos" en Supabase.
-// ─────────────────────────────────────────────────────────
 import { supabase } from '../lib/supabaseClient'
 
 /**

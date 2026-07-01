@@ -1,8 +1,3 @@
-// src/pages/StorePage.jsx
-// ─────────────────────────────────────────────────────────
-// Catálogo de productos. Lee de Supabase con JOIN a categorias.
-// Permite filtrar por categoría y buscar por nombre.
-// ─────────────────────────────────────────────────────────
 import { useEffect, useState } from 'react'
 import { FiSearch, FiLoader } from 'react-icons/fi'
 import { getProductos } from '../repositories/productosRepository'

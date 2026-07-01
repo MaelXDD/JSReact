@@ -1,18 +1,12 @@
-// src/App.jsx
-// ─────────────────────────────────────────────────────────
-// Enrutamiento principal. Separa vistas por rol con guards.
-// ─────────────────────────────────────────────────────────
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './contexts/AuthContext'
 
-// Pages
 import LoginPage      from './pages/LoginPage'
 import StorePage      from './pages/StorePage'
 import CartPage       from './pages/CartPage'
 import AdminPage      from './pages/AdminPage'
 import RegisterPage   from './pages/RegisterPage'
 
-// Layout
 import Navbar from './components/shared/Navbar'
 
 function PrivateRoute({ children }) {

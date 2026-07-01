@@ -1,8 +1,3 @@
-// src/contexts/CartContext.jsx
-// ─────────────────────────────────────────────────────────
-// Estado global del carrito usando Context API.
-// No persiste en Supabase hasta que el usuario confirma la compra.
-// ─────────────────────────────────────────────────────────
 import { createContext, useContext, useReducer } from 'react'
 
 const CartContext = createContext(null)

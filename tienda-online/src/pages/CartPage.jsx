@@ -1,8 +1,3 @@
-// src/pages/CartPage.jsx
-// ─────────────────────────────────────────────────────────
-// Muestra el carrito y permite confirmar la compra.
-// Al confirmar: INSERT en `ventas` + INSERT en `detalle_ventas`
-// ─────────────────────────────────────────────────────────
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiTrash2, FiArrowLeft, FiShoppingBag, FiCheck } from 'react-icons/fi'

@@ -1,7 +1,3 @@
-// src/repositories/detalleVentasRepository.js
-// ─────────────────────────────────────────────────────────
-// Encapsula el acceso a la tabla "detalle_ventas" en Supabase.
-// ─────────────────────────────────────────────────────────
 import { supabase } from '../lib/supabaseClient'
 
 /**

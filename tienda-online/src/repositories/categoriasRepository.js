@@ -1,4 +1,3 @@
-// src/repositories/categoriasRepository.js
 import { supabase } from '../lib/supabaseClient'
 
 /**

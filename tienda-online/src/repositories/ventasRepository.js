@@ -1,7 +1,3 @@
-// src/repositories/ventasRepository.js
-// ─────────────────────────────────────────────────────────
-// Encapsula el acceso a la tabla "ventas" en Supabase.
-// ─────────────────────────────────────────────────────────
 import { supabase } from '../lib/supabaseClient'
 
 /**

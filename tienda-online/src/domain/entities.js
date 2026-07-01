@@ -1,9 +1,3 @@
-// src/domain/entities.js
-// ─────────────────────────────────────────────────────────
-// Definiciones de dominio (entidades) basadas en el esquema
-// de la base de datos. Usamos JSDoc para tener tipado sin TS.
-// ─────────────────────────────────────────────────────────
-
 /**
  * @typedef {Object} Usuario
  * @property {number} id
@@ -48,7 +42,7 @@
  * @property {string} [marca]
  * @property {string} [imagen_url]
  * @property {number} categoria_id
- * @property {Categoria} [categorias] - viene del JOIN con Supabase
+ * @property {Categoria} [categorias]
  */
 
 /**
@@ -77,4 +71,4 @@
  * @property {number} subtotal
  */
 
-export {} // necesario para que el archivo sea tratado como módulo
+export {}

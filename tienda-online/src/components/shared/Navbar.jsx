@@ -1,6 +1,5 @@
-// src/components/shared/Navbar.jsx
 import { Link, useNavigate } from 'react-router-dom'
-import { FiShoppingCart, FiLogOut, FiSettings, FiPackage } from 'react-icons/fi'
+import { FiShoppingCart, FiLogOut, FiSettings } from 'react-icons/fi'
 import { useAuth } from '../../contexts/AuthContext'
 import { useCart } from '../../contexts/CartContext'
 
@@ -19,16 +18,14 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary-600">
-                    <FiPackage className="text-2xl" />
-                    PhantomStore
+                    Phantom
                 </Link>
 
-                {/* Right side */}
                 <div className="flex items-center gap-4">
-          <span className="hidden sm:block text-sm text-gray-500">
-            Hola, <span className="font-medium text-gray-800">{profile?.nombre ?? 'Usuario'}</span>
-              {isAdmin && <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold">Admin</span>}
-          </span>
+                    <span className="hidden sm:block text-sm text-gray-500">
+                        Hola, <span className="font-medium text-gray-800">{profile?.nombre ?? 'Usuario'}</span>
+                        {isAdmin && <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold">Admin</span>}
+                    </span>
 
                     {isAdmin ? (
                         <Link to="/admin" className="flex items-center gap-1 text-sm btn-secondary">
@@ -40,8 +37,8 @@ export default function Navbar() {
                             Carrito
                             {totalItems > 0 && (
                                 <span className="absolute -top-2 -right-2 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                  {totalItems}
-                </span>
+                                    {totalItems}
+                                </span>
                             )}
                         </Link>
                     )}

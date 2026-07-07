@@ -19,7 +19,7 @@ export default function CartPage() {
         try {
             const numero_orden = `ORD-${Date.now()}`
 
-            // 1. Crear venta
+            // Crear venta
             const venta = await crearVenta({
                 fecha:          new Date().toISOString(),
                 total:          totalPrice,
@@ -28,7 +28,7 @@ export default function CartPage() {
                 numero_orden,
             })
 
-            // 2. Crear detalle de venta (bulk)
+            // Detalle de venta
             const detalles = items.map(item => ({
                 venta_id:        venta.id,
                 producto_id:     item.id,
@@ -38,7 +38,7 @@ export default function CartPage() {
             }))
             await crearDetalleVentas(detalles)
 
-            // 3. Reducir stock de cada producto
+            // Reducir stock de cada producto
             for (const item of items) {
                 await actualizarStock(item.id, item.stock - item.qty)
             }

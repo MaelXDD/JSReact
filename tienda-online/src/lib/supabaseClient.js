@@ -1,8 +1,3 @@
-// src/lib/supabaseClient.js
-// ─────────────────────────────────────────────────────────
-// Cliente oficial de Supabase. Se instancia UNA sola vez y
-// se importa desde cualquier parte de la app.
-// ─────────────────────────────────────────────────────────
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL

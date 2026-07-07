@@ -1,4 +1,3 @@
-// src/components/client/ProductCard.jsx
 import { useState } from 'react'
 import { FiShoppingCart, FiCheck } from 'react-icons/fi'
 import { useCart } from '../../contexts/CartContext'

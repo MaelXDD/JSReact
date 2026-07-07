@@ -20,14 +20,14 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    // 1. Sesión activa al montar
+    // Sesión activa al montar
     supabase.auth.getSession().then(({ data: { session } }) => {
       const u = session?.user ?? null
       setUser(u)
       fetchProfile(u).finally(() => setLoading(false))
     })
 
-    // 2. Escucha cambios de sesión (login / logout)
+    // Escucha cambios de sesión
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         const u = session?.user ?? null
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // ── Acciones ──────────────────────────────────────────
+  // Acciones
   async function login(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error

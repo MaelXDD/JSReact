@@ -15,7 +15,7 @@ export default function AdminPage() {
   const [form,       setForm]       = useState(EMPTY_FORM)
   const [saving,     setSaving]     = useState(false)
 
-  // ── READ ──────────────────────────────────────────────
+  // read
   async function loadProducts() {
     setLoading(true)
     const data = await getProductos()
@@ -32,7 +32,7 @@ export default function AdminPage() {
     init()
   }, [])
 
-  // ── ABRIR MODAL ───────────────────────────────────────
+  // abrir el modal
   function openCreate() {
     setForm(EMPTY_FORM)
     setModal('create')
@@ -51,7 +51,7 @@ export default function AdminPage() {
     setModal(product)
   }
 
-  // ── CREATE / UPDATE ───────────────────────────────────
+  // create / update
   async function handleSave(e) {
     e.preventDefault()
     setSaving(true)
@@ -78,7 +78,7 @@ export default function AdminPage() {
     }
   }
 
-  // ── DELETE ────────────────────────────────────────────
+  // delete
 async function handleDelete(id) {
   if (!window.confirm('¿Eliminar este producto?')) return
   try {
@@ -93,7 +93,7 @@ async function handleDelete(id) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
   }
 
-  // ── RENDER ────────────────────────────────────────────
+  // render
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}

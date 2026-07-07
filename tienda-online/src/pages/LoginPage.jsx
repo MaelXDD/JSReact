@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { FiPackage, FiMail, FiLock, FiAlertCircle } from 'react-icons/fi'
+import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginPage() {
@@ -28,11 +28,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
       <div className="card p-8 w-full max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-4">
-            <FiPackage className="text-3xl text-primary-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">PhantomStore</h1>
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Phantom</h1>
           <p className="text-gray-500 text-sm mt-1">Inicia sesión para continuar</p>
         </div>
 

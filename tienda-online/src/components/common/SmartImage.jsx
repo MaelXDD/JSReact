@@ -1,4 +1,3 @@
-// src/components/common/SmartImage.jsx
 export default function SmartImage({ src, alt, className }) {
     const PLACEHOLDER = 'https://placehold.co/400x300?text=Sin+Imagen';
 

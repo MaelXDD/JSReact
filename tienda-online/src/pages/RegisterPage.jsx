@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { FiPackage, FiAlertCircle } from 'react-icons/fi'
+import { FiAlertCircle } from 'react-icons/fi'
 import { supabase } from '../lib/supabaseClient'
 
 export default function RegisterPage() {
@@ -18,14 +18,14 @@ export default function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      // 1. Crear usuario en Supabase Auth
+      // Crear usuario en Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
       })
       if (authError) throw authError
 
-      // 2. Insertar en tabla `usuarios` con rol Cliente por defecto
+      // Inserta en tabla usuarios con rol Cliente por defecto
       const { error: dbError } = await supabase.from('usuarios').insert({
         nombre:           form.nombre,
         email:            form.email,
@@ -58,9 +58,6 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
       <div className="card p-8 w-full max-w-md">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-primary-100 rounded-2xl mb-3">
-            <FiPackage className="text-2xl text-primary-600" />
-          </div>
           <h1 className="text-2xl font-bold">Crear cuenta</h1>
           <p className="text-gray-500 text-sm mt-1">Completa tus datos para registrarte</p>
         </div>

@@ -13,7 +13,7 @@ export default function StorePage() {
   const [catFilter,  setCatFilter]  = useState('all')
   const [loading,    setLoading]    = useState(true)
 
-  // ── SELECT con JOIN ───────────────────────────────────
+  // Select con join
   useEffect(() => {
     async function loadData() {
       setLoading(true)
@@ -28,19 +28,18 @@ export default function StorePage() {
     loadData()
   }, [])
 
-  // ── Filtrado local (rápido, sin re-fetch) ────────────
+  // Filtrado local
   const filtered = products.filter(p => {
     const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase())
     const matchCat    = catFilter === 'all' || p.categoria_id === catFilter
     return matchSearch && matchCat
   })
 
-  // Filtramos por categoria_id desde los propios datos
+  // Filtro por categoria_id desde los propios datos
   const displayedByCategory = catFilter === 'all'
     ? filtered
     : products.filter(p => {
         const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase())
-        // Buscamos la categoría por nombre ya que tenemos el JOIN
         const catName = categories.find(c => c.id === catFilter)?.nombre
         const matchCat = p.categorias?.nombre === catName
         return matchSearch && matchCat

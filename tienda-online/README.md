@@ -138,3 +138,12 @@ A continuación se listan hallazgos del análisis del código, considerados rele
 - **Pruebas automatizadas** y de configuración de linter en `package.json`.
 
 Estas son funciones que aun faltan implementar en el proyecto y se incorporaran para la entrega final
+
+---
+
+## 8. Pruebas de Seguridad Automatizada 
+
+- **Inyección SQL.** Si la aplicación está conectada a una base de datos sin una capa de seguridad en el frontend, es posible explotarla mediante inyección SQL. La primera defensa debe estar en los formularios, evitando que se filtren sentencias SQL maliciosas.
+- **Inyección de JavaScript** Es posible inyectar código JavaScript en un formulario. Si el sistema no lo filtra y el script se ejecuta (por ejemplo, mostrando un alert()), la aplicación es vulnerable y un atacante podría acceder a datos de sesión o de la base de datos.
+- **Metodología de prueba** Se utilizó OWASP ZAP (Zed Attack Proxy) para atacar el aplicativo y evaluar su nivel de vulnerabilidad.
+- **Informe del ataque** Luego de realizar la prueba automatizada realizar un informe de seguridad sobre la prueba recién realizada.

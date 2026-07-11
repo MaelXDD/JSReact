@@ -2,7 +2,7 @@
 
 Aplicación de comercio electrónico para artículos de tecnología y gaming (consolas, sillas, periféricos, videojuegos), con catálogo de productos, carrito de compras, proceso de checkout y panel de administración.
 
-**Stack tecnológico:** React 18, Vite, Tailwind CSS, React Router 6, React Icons, Supabase (Autenticación y Base de Datos Postgres)
+**Stack tecnológico:** React 18, Vite, Tailwind CSS, React Router 6, Supabase (Autenticación y Base de Datos Postgres)
 
 ---
 
@@ -14,9 +14,8 @@ npm install
 
 # 2. Configurar credenciales de Supabase
 # Crear/editar el archivo .env.local en la raíz del proyecto con:
-VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
-VITE_SUPABASE_ANON_KEY=tu-anon-key
-# Estas credenciales se obtienen en Supabase Dashboard > Project Settings > API
+VITE_SUPABASE_URL=https://qmtjbyuhiedqudpvfgzc.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_lVQ1ToFTc5aR2TKaxJY6WQ_5SfzqBUp
 
 # 3. Levantar el servidor de desarrollo
 npm run dev
@@ -36,44 +35,7 @@ En el proyecto de Supabase, ir a Authentication > Providers > Email y verificar 
 
 ### 2.2 Row Level Security (RLS)
 
-Para que el cliente anónimo pueda leer productos y categorías, ejecutar en el SQL Editor de Supabase:
-
-```sql
--- Lectura pública de productos y categorías
-ALTER TABLE productos  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE categorias ENABLE ROW LEVEL SECURITY;
-ALTER TABLE etiquetas  ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Lectura pública de productos"
-  ON productos FOR SELECT USING (true);
-
-CREATE POLICY "Lectura pública de categorías"
-  ON categorias FOR SELECT USING (true);
-
--- Usuarios: solo pueden leer/editar su propio perfil
-ALTER TABLE usuarios ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Usuarios pueden leer su propio perfil"
-  ON usuarios FOR SELECT USING (email = auth.jwt() ->> 'email');
-
-CREATE POLICY "Usuarios pueden insertar su perfil"
-  ON usuarios FOR INSERT WITH CHECK (true);
-
--- Ventas: solo el propio usuario
-ALTER TABLE ventas ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Insertar ventas propias"
-  ON ventas FOR INSERT WITH CHECK (usuario_id = (
-    SELECT id FROM usuarios WHERE email = auth.jwt() ->> 'email'
-  ));
-
-ALTER TABLE detalle_ventas ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Insertar detalle de ventas"
-  ON detalle_ventas FOR INSERT WITH CHECK (true);
-```
-
-Nota: para el panel de administración (CRUD de productos) se recomienda agregar políticas restrictivas por rol. Con fines académicos, también es posible desactivar RLS durante el desarrollo.
+Se configuro en supabase ROW LEVEL SECURITY para que los usuarios anonimos puedan acceder a hacer cambios en la base de datos agregando políticas restrictivas por rol.
 
 ### 2.3 Creación de un usuario administrador
 
@@ -164,17 +126,15 @@ El rol se obtiene de la tabla `usuarios`, filtrando por el correo electrónico d
 
 ---
 
-## 7. Observaciones técnicas
+## 7. Funciones de desarrollo futuras
 
 A continuación se listan hallazgos del análisis del código, considerados relevantes para la evaluación del proyecto y para una eventual mejora posterior a la entrega:
 
-- **Archivo de entorno versionado en git.** `.env.local` está incluido en el control de versiones (no existe `.gitignore`). Se recomienda excluirlo y rotar las claves de Supabase si el repositorio ha sido compartido.
-- **Contraseña almacenada en texto plano.** En `RegisterPage.jsx`, el campo `password` se guarda sin cifrar directamente en la tabla `usuarios`, además de registrarse en Supabase Auth. Esta duplicación de información sensible no es una práctica recomendada.
-- **Capa de servicios subutilizada.** Existen módulos en `services/` (`productoService`, `categoriaService`, `ventaService`, `usuarioService`) pensados para encapsular reglas de negocio, pero las páginas `StorePage`, `AdminPage` y `CartPage` acceden directamente a los módulos de `repositories/`, sin pasar por dicha capa. Se recomienda unificar el criterio de acceso a datos.
-- **Checkout sin control de concurrencia.** La función `actualizarStock` calcula el nuevo stock restando la cantidad comprada al valor cacheado en el carrito, sin releer el stock actual en la base de datos ni emplear una transacción. Compras simultáneas del mismo producto podrían generar inconsistencias en el inventario.
-- **Asignación de rol administrador manual.** No existe una interfaz para promover usuarios a `ADMIN`; el cambio debe hacerse directamente en la base de datos.
+- **Archivo de entorno versionado en git.** `.env.local` está incluido en el control de versiones (no existe `.gitignore`).
+- **Contraseña almacenada en texto plano.** En `RegisterPage.jsx`, el campo `password` se guarda sin cifrar directamente en la tabla `usuarios`, además de registrarse en Supabase Auth.
+- **Capa de servicios subutilizada.** Existen módulos en `services/` (`productoService`, `categoriaService`, `ventaService`, `usuarioService`) pensados para encapsular reglas de negocio, pero las páginas `StorePage`, `AdminPage` y `CartPage` acceden directamente a los módulos de `repositories/`, sin pasar por dicha capa.
 - **Lógica de filtrado duplicada.** En `StorePage.jsx`, las variables `filtered`, `displayedByCategory` y `displayed` repiten el mismo criterio de filtrado y pueden unificarse.
 - **Manejo de errores no centralizado.** Los errores devueltos por Supabase se muestran mediante `alert()` en distintos puntos (`CartPage`, `AdminPage`), en lugar de un componente de notificación común.
-- **Ausencia de pruebas automatizadas** y de configuración de linter en `package.json`.
+- **Pruebas automatizadas** y de configuración de linter en `package.json`.
 
-Estas observaciones no afectan el funcionamiento del proyecto en su forma actual, pero constituyen los puntos de mejora prioritarios de cara a un entorno de producción.
+Estas son funciones que aun faltan implementar en el proyecto y se incorporaran para la entrega final

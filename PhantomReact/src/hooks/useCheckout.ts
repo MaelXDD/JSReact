@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
-import { crearVenta } from '../repositories/ventasRepository'
-import { crearDetalleVentas } from '../repositories/detalleVentasRepository'
-import { actualizarStock } from '../repositories/productosRepository'
+import { ventaService } from '../services/ventaService'
+import { productosService } from '../services/productoService'
 
 function isSupabaseError(err: unknown): err is { message: string } {
   return typeof err === 'object' && err !== null && 'message' in err
@@ -23,25 +22,26 @@ export function useCheckout() {
     try {
       const numero_orden = `ORD-${Date.now()}`
 
-      const venta = await crearVenta({
-        fecha: new Date().toISOString(),
-        total: totalPrice,
-        cantidad_items: totalItems,
-        usuario_id: profile.id,
-        numero_orden,
-      })
-
       const detalles = items.map(item => ({
-        venta_id: venta.id,
         producto_id: item.id,
         cantidad: item.qty,
         precio_unitario: item.precio,
         subtotal: item.precio * item.qty,
       }))
-      await crearDetalleVentas(detalles)
+
+      await ventaService.registrarCompra(
+        {
+          fecha: new Date().toISOString(),
+          total: totalPrice,
+          cantidad_items: totalItems,
+          usuario_id: profile.id,
+          numero_orden,
+        },
+        detalles,
+      )
 
       for (const item of items) {
-        await actualizarStock(item.id, item.stock - item.qty)
+        await productosService.actualizarStock(item.id, item.stock - item.qty)
       }
 
       clearCart()

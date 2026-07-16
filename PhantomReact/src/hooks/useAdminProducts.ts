@@ -1,11 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import {
-  getProductos,
-  crearProducto,
-  actualizarProducto,
-  eliminarProducto,
-} from '../repositories/productosRepository'
-import { getCategorias } from '../repositories/categoriasRepository'
+import { productosService } from '../services/productoService'
+import { categoriasService } from '../services/categoriaService'
 import type { Categoria, Producto } from '../domain/entities'
 
 interface ProductFormState {
@@ -40,7 +35,7 @@ export function useAdminProducts() {
 
   async function loadProducts(): Promise<void> {
     setLoading(true)
-    const data = await getProductos()
+    const data = await productosService.obtenerParaAdmin()
     setProducts(data)
     setLoading(false)
   }
@@ -48,7 +43,7 @@ export function useAdminProducts() {
   useEffect(() => {
     async function init() {
       await loadProducts()
-      const cats = await getCategorias()
+      const cats = await categoriasService.obtenerCategorias()
       setCategories(cats)
     }
     init()
@@ -91,9 +86,9 @@ export function useAdminProducts() {
       }
 
       if (modal === 'create') {
-        await crearProducto(payload)
+        await productosService.crear(payload)
       } else if (modal) {
-        await actualizarProducto(modal.id, payload)
+        await productosService.actualizar(modal.id, payload)
       }
 
       setModal(false)
@@ -108,7 +103,7 @@ export function useAdminProducts() {
   async function handleDelete(id: number): Promise<void> {
     if (!window.confirm('¿Eliminar este producto?')) return
     try {
-      await eliminarProducto(id)
+      await productosService.eliminar(id)
       await loadProducts()
     } catch (err) {
       alert('Error: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))

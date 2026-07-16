@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getProductos } from '../repositories/productosRepository'
-import { getCategorias } from '../repositories/categoriasRepository'
+import { productosService } from '../services/productoService'
+import { categoriasService } from '../services/categoriaService'
 import type { Categoria, Producto } from '../domain/entities'
 
 export function useStoreCatalog() {
@@ -13,7 +13,10 @@ export function useStoreCatalog() {
   useEffect(() => {
     async function loadData() {
       setLoading(true)
-      const [prods, cats] = await Promise.all([getProductos(), getCategorias()])
+      const [prods, cats] = await Promise.all([
+        productosService.obtenerParaAdmin(),
+        categoriasService.obtenerCategorias(),
+      ])
       setProducts(prods)
       setCategories(cats)
       setLoading(false)

@@ -1,4 +1,4 @@
-# PhantomStore — Tienda Online con React y Supabase
+# PhantomStore — Tienda electronica Online con React y Supabase
 
 Aplicación de comercio electrónico para artículos de tecnología y gaming (consolas, sillas, periféricos, videojuegos), con catálogo de productos, carrito de compras, proceso de checkout y panel de administración.
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, useReducer, type ReactNode } from 'react'
 import type { CartItem, Producto } from '../domain/entities'
 
 type CartAction =
@@ -22,7 +22,7 @@ const CartContext = createContext<CartContextValue | null>(null)
 function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   switch (action.type) {
     case 'ADD': {
-      const exists = state.find(i => i.id === action.product.id)
+      const exists = state.some(i => i.id === action.product.id)
       if (exists) {
         return state.map(i =>
           i.id === action.product.id
@@ -45,7 +45,7 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   }
 }
 
-export function CartProvider({ children }: { children: ReactNode }) {
+export function CartProvider({ children }: { readonly children: ReactNode }) {
   const [items, dispatch] = useReducer(cartReducer, [])
 
   const addItem = (product: Producto) => dispatch({ type: 'ADD', product })
@@ -56,8 +56,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const totalItems = items.reduce((s, i) => s + i.qty, 0)
   const totalPrice = items.reduce((s, i) => s + i.precio * i.qty, 0)
 
+  const value = useMemo(
+    () => ({ items, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice }),
+    [items, totalItems, totalPrice]
+  )
+
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   )

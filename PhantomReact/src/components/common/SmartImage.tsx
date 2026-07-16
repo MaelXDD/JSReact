@@ -3,9 +3,9 @@ import type { SyntheticEvent } from 'react'
 const PLACEHOLDER = 'https://placehold.co/400x300?text=Sin+Imagen'
 
 interface SmartImageProps {
-  src?: string
-  alt: string
-  className?: string
+  readonly src?: string
+  readonly alt: string
+  readonly className?: string
 }
 
 export default function SmartImage({ src, alt, className }: SmartImageProps) {

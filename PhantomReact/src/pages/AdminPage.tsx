@@ -3,6 +3,17 @@ import { useAdminProducts } from '../hooks/useAdminProducts'
 
 const TABLE_HEADERS = ['ID', 'Nombre', 'Marca', 'Categoría', 'Precio', 'Stock', 'Acciones']
 
+function stockBadgeClass(stock: number): string {
+  if (stock === 0) return 'bg-red-50 text-red-600'
+  if (stock < 5) return 'bg-yellow-50 text-yellow-600'
+  return 'bg-green-50 text-green-600'
+}
+
+function saveButtonLabel(saving: boolean, isCreating: boolean): string {
+  if (saving) return 'Guardando...'
+  return isCreating ? 'Crear producto' : 'Guardar cambios'
+}
+
 export default function AdminPage() {
   const {
     products, categories, loading, modal, form, saving,
@@ -66,11 +77,7 @@ export default function AdminPage() {
                       S/ {Number(p.precio).toFixed(2)}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                        p.stock === 0 ? 'bg-red-50 text-red-600' :
-                        p.stock < 5 ? 'bg-yellow-50 text-yellow-600' :
-                        'bg-green-50 text-green-600'
-                      }`}>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${stockBadgeClass(p.stock)}`}>
                         {p.stock}
                       </span>
                     </td>
@@ -112,34 +119,34 @@ export default function AdminPage() {
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
-                <input name="nombre" required className="input-field" value={form.nombre} onChange={onChange} />
+                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                <input id="nombre" name="nombre" required className="input-field" value={form.nombre} onChange={onChange} />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                <textarea name="descripcion" rows={3} className="input-field resize-none" value={form.descripcion} onChange={onChange} />
+                <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows={3} className="input-field resize-none" value={form.descripcion} onChange={onChange} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio (S/) *</label>
-                  <input name="precio" type="number" step="0.01" min="0" required className="input-field" value={form.precio} onChange={onChange} />
+                  <label htmlFor="precio" className="block text-sm font-medium text-gray-700 mb-1">Precio (S/) *</label>
+                  <input id="precio" name="precio" type="number" step="0.01" min="0" required className="input-field" value={form.precio} onChange={onChange} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
-                  <input name="stock" type="number" min="0" required className="input-field" value={form.stock} onChange={onChange} />
+                  <label htmlFor="stock" className="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                  <input id="stock" name="stock" type="number" min="0" required className="input-field" value={form.stock} onChange={onChange} />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Marca</label>
-                  <input name="marca" className="input-field" value={form.marca} onChange={onChange} />
+                  <label htmlFor="marca" className="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+                  <input id="marca" name="marca" className="input-field" value={form.marca} onChange={onChange} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-                  <select name="categoria_id" className="input-field" value={form.categoria_id} onChange={onChange}>
+                  <label htmlFor="categoria_id" className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                  <select id="categoria_id" name="categoria_id" className="input-field" value={form.categoria_id} onChange={onChange}>
                     <option value="">Sin categoría</option>
                     {categories.map(c => (
                       <option key={c.id} value={c.id}>{c.nombre}</option>
@@ -149,13 +156,13 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL de imagen</label>
-                <input name="imagen_url" type="url" className="input-field" placeholder="https://..." value={form.imagen_url} onChange={onChange} />
+                <label htmlFor="imagen_url" className="block text-sm font-medium text-gray-700 mb-1">URL de imagen</label>
+                <input id="imagen_url" name="imagen_url" type="text" className="input-field" placeholder="/Imagenes/..." value={form.imagen_url} onChange={onChange} />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="btn-primary flex-1">
-                  {saving ? 'Guardando...' : modal === 'create' ? 'Crear producto' : 'Guardar cambios'}
+                  {saveButtonLabel(saving, modal === 'create')}
                 </button>
                 <button type="button" onClick={closeModal} className="btn-secondary flex-1">
                   Cancelar

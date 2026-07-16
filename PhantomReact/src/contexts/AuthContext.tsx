@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabaseClient'
 import { authService } from '../services/usuarioService'
@@ -15,7 +15,11 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+async function login(email: string, password: string): Promise<void> {
+  await authService.login(email, password)
+}
+
+export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Usuario | null>(null)
   const [loading, setLoading] = useState(true)
@@ -54,10 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  async function login(email: string, password: string): Promise<void> {
-    await authService.login(email, password)
-  }
-
   async function logout(): Promise<void> {
     await authService.logout()
     setUser(null)
@@ -66,8 +66,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAdmin = profile?.rol === 'ADMIN'
 
+  const value = useMemo(
+    () => ({ user, profile, isAdmin, loading, login, logout }),
+    [user, profile, isAdmin, loading]
+  )
+
   return (
-    <AuthContext.Provider value={{ user, profile, isAdmin, loading, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,6 +1,33 @@
 import { FiSearch, FiLoader } from 'react-icons/fi'
 import ProductCard from '../components/client/ProductCard'
 import { useStoreCatalog } from '../hooks/useStoreCatalog'
+import type { Producto } from '../domain/entities'
+
+function ProductGrid({ loading, displayed }: { readonly loading: boolean; readonly displayed: Producto[] }) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24 text-gray-400">
+        <FiLoader className="animate-spin text-3xl mr-3" /> Cargando productos...
+      </div>
+    )
+  }
+
+  if (displayed.length === 0) {
+    return (
+      <div className="text-center py-24 text-gray-400">
+        <p className="text-lg">No se encontraron productos.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {displayed.map(product => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
 
 export default function StorePage() {
   const { categories, search, setSearch, catFilter, setCatFilter, loading, displayed } = useStoreCatalog()
@@ -26,7 +53,7 @@ export default function StorePage() {
         <select
           className="input-field sm:w-48"
           value={catFilter}
-          onChange={e => setCatFilter(e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10))}
+          onChange={e => setCatFilter(e.target.value === 'all' ? 'all' : Number.parseInt(e.target.value, 10))}
         >
           <option value="all">Todas las categorías</option>
           {categories.map(c => (
@@ -35,21 +62,7 @@ export default function StorePage() {
         </select>
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-24 text-gray-400">
-          <FiLoader className="animate-spin text-3xl mr-3" /> Cargando productos...
-        </div>
-      ) : displayed.length === 0 ? (
-        <div className="text-center py-24 text-gray-400">
-          <p className="text-lg">No se encontraron productos.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {displayed.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+      <ProductGrid loading={loading} displayed={displayed} />
     </div>
   )
 }

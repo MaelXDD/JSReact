@@ -10,13 +10,13 @@ import RegisterPage from './pages/RegisterPage'
 
 import Navbar from './components/shared/Navbar'
 
-function PrivateRoute({ children }: { children: ReactNode }) {
+function PrivateRoute({ children }: { readonly children: ReactNode }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="flex items-center justify-center min-h-screen"><span className="text-gray-500">Cargando...</span></div>
   return user ? <>{children}</> : <Navigate to="/login" replace />
 }
 
-function AdminRoute({ children }: { children: ReactNode }) {
+function AdminRoute({ children }: { readonly children: ReactNode }) {
   const { user, isAdmin, loading } = useAuth()
   if (loading) return <div className="flex items-center justify-center min-h-screen"><span className="text-gray-500">Cargando...</span></div>
   if (!user) return <Navigate to="/login" replace />

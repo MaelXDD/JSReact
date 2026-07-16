@@ -80,9 +80,9 @@ export function useAdminProducts() {
         descripcion: form.descripcion,
         marca: form.marca,
         imagen_url: form.imagen_url,
-        precio: parseFloat(form.precio),
-        stock: parseInt(form.stock, 10),
-        categoria_id: form.categoria_id ? parseInt(form.categoria_id, 10) : undefined,
+        precio: Number.parseFloat(form.precio),
+        stock: Number.parseInt(form.stock, 10),
+        categoria_id: form.categoria_id ? Number.parseInt(form.categoria_id, 10) : undefined,
       }
 
       if (modal === 'create') {

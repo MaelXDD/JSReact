@@ -4,7 +4,13 @@ import { useAddToCart } from '../../hooks/useAddToCart'
 import type { Producto } from '../../domain/entities'
 
 interface ProductCardProps {
-  product: Producto
+  readonly product: Producto
+}
+
+function addToCartButtonClass(added: boolean, outOfStock: boolean): string {
+  if (added) return 'bg-green-500 text-white'
+  if (outOfStock) return 'bg-gray-100 text-gray-400 cursor-not-allowed'
+  return 'bg-primary-600 hover:bg-primary-700 text-white'
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -51,13 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <button
           onClick={handleAdd}
           disabled={outOfStock || added}
-          className={`mt-3 flex items-center justify-center gap-2 w-full py-2 rounded-lg font-medium text-sm transition-all duration-200
-            ${added
-              ? 'bg-green-500 text-white'
-              : outOfStock
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-primary-600 hover:bg-primary-700 text-white'
-            }`}
+          className={`mt-3 flex items-center justify-center gap-2 w-full py-2 rounded-lg font-medium text-sm transition-all duration-200 ${addToCartButtonClass(added, outOfStock)}`}
         >
           {added ? (
             <><FiCheck /> Agregado</>

@@ -15,10 +15,11 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div className="relative">
               <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
+                id="email"
                 type="email"
                 required
                 className="input-field pl-9"
@@ -30,10 +31,11 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
             <div className="relative">
               <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
+                id="password"
                 type="password"
                 required
                 className="input-field pl-9"

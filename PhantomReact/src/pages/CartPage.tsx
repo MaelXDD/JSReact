@@ -1,57 +1,9 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FiTrash2, FiArrowLeft, FiShoppingBag, FiCheck } from 'react-icons/fi'
-import { useCart } from '../contexts/CartContext'
-import { useAuth } from '../contexts/AuthContext'
-import { crearVenta } from '../repositories/ventasRepository'
-import { crearDetalleVentas } from '../repositories/detalleVentasRepository'
-import { actualizarStock } from '../repositories/productosRepository'
+import { useCheckout } from '../hooks/useCheckout'
+
 export default function CartPage() {
-  const { items, removeItem, updateQty, clearCart, totalItems, totalPrice } = useCart()
-  const { profile } = useAuth()
-  const navigate    = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-
-    async function handleCheckout() {
-        if (items.length === 0) return
-        setLoading(true)
-        try {
-            const numero_orden = `ORD-${Date.now()}`
-
-            // Crear venta
-            const venta = await crearVenta({
-                fecha:          new Date().toISOString(),
-                total:          totalPrice,
-                cantidad_items: totalItems,
-                usuario_id:     profile.id,
-                numero_orden,
-            })
-
-            // Detalle de venta
-            const detalles = items.map(item => ({
-                venta_id:        venta.id,
-                producto_id:     item.id,
-                cantidad:        item.qty,
-                precio_unitario: item.precio,
-                subtotal:        item.precio * item.qty,
-            }))
-            await crearDetalleVentas(detalles)
-
-            // Reducir stock de cada producto
-            for (const item of items) {
-                await actualizarStock(item.id, item.stock - item.qty)
-            }
-
-            clearCart()
-            setSuccess(true)
-            setTimeout(() => navigate('/'), 3000)
-        } catch (err) {
-            alert('Error al procesar la compra: ' + err.message)
-        } finally {
-            setLoading(false)
-        }
-    }
+  const { items, removeItem, updateQty, totalItems, totalPrice, loading, success, handleCheckout } = useCheckout()
 
   if (success) {
     return (
@@ -87,7 +39,6 @@ export default function CartPage() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Items */}
         <div className="lg:col-span-2 space-y-3">
           {items.map(item => (
             <div key={item.id} className="card p-4 flex gap-4">
@@ -95,7 +46,7 @@ export default function CartPage() {
                 src={item.imagen_url || 'https://placehold.co/80x80?text=?'}
                 alt={item.nombre}
                 className="w-20 h-20 object-cover rounded-lg shrink-0"
-                onError={e => { e.target.src = 'https://placehold.co/80x80?text=?' }}
+                onError={e => { e.currentTarget.src = 'https://placehold.co/80x80?text=?' }}
               />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-900 truncate">{item.nombre}</h3>
@@ -125,7 +76,6 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* Resumen */}
         <div className="card p-6 h-fit">
           <h2 className="text-lg font-bold mb-4">Resumen del pedido</h2>
           <div className="space-y-2 text-sm text-gray-600 mb-4">

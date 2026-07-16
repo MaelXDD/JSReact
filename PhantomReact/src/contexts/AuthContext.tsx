@@ -1,22 +1,37 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import type { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabaseClient'
+import { authService } from '../services/usuarioService'
+import type { Usuario } from '../domain/entities'
 
-const AuthContext = createContext(null)
+interface AuthContextValue {
+  user: User | null
+  profile: Usuario | null
+  isAdmin: boolean
+  loading: boolean
+  login: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+}
 
-export function AuthProvider({ children }) {
-  const [user,    setUser]    = useState(null)
-  const [profile, setProfile] = useState(null)
+const AuthContext = createContext<AuthContextValue | null>(null)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Usuario | null>(null)
   const [loading, setLoading] = useState(true)
 
   // Carga el perfil extendido desde la tabla `usuarios`
-  async function fetchProfile(authUser) {
-    if (!authUser) { setProfile(null); return }
+  async function fetchProfile(authUser: User | null): Promise<void> {
+    if (!authUser) {
+      setProfile(null)
+      return
+    }
     const { data, error } = await supabase
       .from('usuarios')
       .select('*')
       .eq('email', authUser.email)
       .single()
-    if (!error) setProfile(data)
+    if (!error) setProfile(data as Usuario)
   }
 
   useEffect(() => {
@@ -39,15 +54,12 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Acciones
-  async function login(email, password) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
-    return data
+  async function login(email: string, password: string): Promise<void> {
+    await authService.login(email, password)
   }
 
-  async function logout() {
-    await supabase.auth.signOut()
+  async function logout(): Promise<void> {
+    await authService.logout()
     setUser(null)
     setProfile(null)
   }
@@ -62,7 +74,7 @@ export function AuthProvider({ children }) {
 }
 
 // Hook de acceso rápido
-export function useAuth() {
+export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth debe usarse dentro de <AuthProvider>')
   return ctx

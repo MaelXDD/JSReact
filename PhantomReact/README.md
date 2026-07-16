@@ -13,9 +13,7 @@ Aplicación de comercio electrónico para artículos de tecnología y gaming (co
 npm install
 
 # 2. Configurar credenciales de Supabase
-# Crear/editar el archivo .env.local en la raíz del proyecto con:
-VITE_SUPABASE_URL=https://qmtjbyuhiedqudpvfgzc.supabase.co
-VITE_SUPABASE_ANON_KEY=sb_publishable_lVQ1ToFTc5aR2TKaxJY6WQ_5SfzqBUp
+# Crear/editar el archivo .env.local en la raíz del proyecto con las credenciales que le hemos brindado en los comentarios del utp+ class
 
 # 3. Levantar el servidor de desarrollo
 npm run dev

@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './contexts/AuthContext'
 import { CartProvider } from './contexts/CartContext'
+import { ToastProvider } from './contexts/ToastContext'   // ← agregar esta línea
+import './index.css'
 import './index.css'
 
 const rootElement = document.getElementById('root')
@@ -12,13 +14,15 @@ if (!rootElement) {
 }
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <CartProvider>
+                    <ToastProvider>      {/* ← agregar apertura */}
+                        <App />
+                    </ToastProvider>     {/* ← agregar cierre */}
+                </CartProvider>
+            </AuthProvider>
+        </BrowserRouter>
+    </React.StrictMode>
 )

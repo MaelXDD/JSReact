@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { productosService } from '../services/productoService'
 import { categoriasService } from '../services/categoriaService'
+import { useToast } from '../contexts/ToastContext'
 import type { Categoria, Producto } from '../domain/entities'
 
 interface ProductFormState {
@@ -32,6 +33,7 @@ export function useAdminProducts() {
   const [modal, setModal] = useState<ModalState>(false)
   const [form, setForm] = useState<ProductFormState>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
+  const { showToast } = useToast()
 
   async function loadProducts(): Promise<void> {
     setLoading(true)
@@ -94,7 +96,7 @@ export function useAdminProducts() {
       setModal(false)
       await loadProducts()
     } catch (err) {
-      alert('Error al guardar: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
+      showToast('Error al guardar: ' + (isSupabaseError(err) ? err.message : 'error desconocido'), 'error')
     } finally {
       setSaving(false)
     }
@@ -106,7 +108,7 @@ export function useAdminProducts() {
       await productosService.eliminar(id)
       await loadProducts()
     } catch (err) {
-      alert('Error: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
+      showToast('Error: ' + (isSupabaseError(err) ? err.message : 'error desconocido'), 'error')
     }
   }
 

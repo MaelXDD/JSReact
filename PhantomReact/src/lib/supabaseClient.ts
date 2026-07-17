@@ -11,4 +11,8 @@ if (!supabaseUrl || !supabaseKey) {
 // exponerse en el cliente. La seguridad real de los datos depende de las
 // políticas de Row Level Security (RLS) configuradas en el proyecto de Supabase,
 // no de mantener esta clave en secreto.
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey)
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: false,
+  },
+})

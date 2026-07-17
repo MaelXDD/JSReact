@@ -3,6 +3,10 @@ import { productosService } from '../services/productoService'
 import { categoriasService } from '../services/categoriaService'
 import type { Categoria, Producto } from '../domain/entities'
 
+function isSupabaseError(err: unknown): err is { message: string } {
+  return typeof err === 'object' && err !== null && 'message' in err
+}
+
 export function useStoreCatalog() {
   const [products, setProducts] = useState<Producto[]>([])
   const [categories, setCategories] = useState<Categoria[]>([])
@@ -13,13 +17,18 @@ export function useStoreCatalog() {
   useEffect(() => {
     async function loadData() {
       setLoading(true)
-      const [prods, cats] = await Promise.all([
-        productosService.obtenerParaAdmin(),
-        categoriasService.obtenerCategorias(),
-      ])
-      setProducts(prods)
-      setCategories(cats)
-      setLoading(false)
+      try {
+        const [prods, cats] = await Promise.all([
+          productosService.obtenerParaAdmin(),
+          categoriasService.obtenerCategorias(),
+        ])
+        setProducts(prods)
+        setCategories(cats)
+      } catch (err) {
+        alert('Error al cargar el catálogo: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
+      } finally {
+        setLoading(false)
+      }
     }
     loadData()
   }, [])

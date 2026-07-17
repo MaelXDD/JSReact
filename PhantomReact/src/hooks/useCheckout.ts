@@ -4,7 +4,6 @@ import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
 import { ventaService } from '../services/ventaService'
 import { productosService } from '../services/productoService'
-import { useToast } from '../contexts/ToastContext'   // ← agregar
 
 function isSupabaseError(err: unknown): err is { message: string } {
   return typeof err === 'object' && err !== null && 'message' in err
@@ -16,7 +15,6 @@ export function useCheckout() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  const { showToast } = useToast()
 
   async function handleCheckout(): Promise<void> {
     if (items.length === 0 || !profile) return
@@ -32,14 +30,14 @@ export function useCheckout() {
       }))
 
       await ventaService.registrarCompra(
-        {
-          fecha: new Date().toISOString(),
-          total: totalPrice,
-          cantidad_items: totalItems,
-          usuario_id: profile.id,
-          numero_orden,
-        },
-        detalles,
+          {
+            fecha: new Date().toISOString(),
+            total: totalPrice,
+            cantidad_items: totalItems,
+            usuario_id: profile.id,
+            numero_orden,
+          },
+          detalles,
       )
 
       for (const item of items) {
@@ -50,7 +48,7 @@ export function useCheckout() {
       setSuccess(true)
       setTimeout(() => navigate('/'), 3000)
     } catch (err) {
-      showToast('Error al procesar la compra: ' + (isSupabaseError(err) ? err.message : 'error desconocido'), 'error')
+      alert('Error al procesar la compra: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
     } finally {
       setLoading(false)
     }

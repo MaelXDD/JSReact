@@ -1,7 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { productosService } from '../services/productoService'
 import { categoriasService } from '../services/categoriaService'
-import { useToast } from '../contexts/ToastContext'
 import type { Categoria, Producto } from '../domain/entities'
 
 interface ProductFormState {
@@ -33,20 +32,28 @@ export function useAdminProducts() {
   const [modal, setModal] = useState<ModalState>(false)
   const [form, setForm] = useState<ProductFormState>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
-  const { showToast } = useToast()
 
   async function loadProducts(): Promise<void> {
     setLoading(true)
-    const data = await productosService.obtenerParaAdmin()
-    setProducts(data)
-    setLoading(false)
+    try {
+      const data = await productosService.obtenerParaAdmin()
+      setProducts(data)
+    } catch (err) {
+      alert('Error al cargar productos: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
     async function init() {
       await loadProducts()
-      const cats = await categoriasService.obtenerCategorias()
-      setCategories(cats)
+      try {
+        const cats = await categoriasService.obtenerCategorias()
+        setCategories(cats)
+      } catch (err) {
+        alert('Error al cargar categorías: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
+      }
     }
     init()
   }, [])
@@ -96,7 +103,7 @@ export function useAdminProducts() {
       setModal(false)
       await loadProducts()
     } catch (err) {
-      showToast('Error al guardar: ' + (isSupabaseError(err) ? err.message : 'error desconocido'), 'error')
+      alert('Error al guardar: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
     } finally {
       setSaving(false)
     }
@@ -108,7 +115,7 @@ export function useAdminProducts() {
       await productosService.eliminar(id)
       await loadProducts()
     } catch (err) {
-      showToast('Error: ' + (isSupabaseError(err) ? err.message : 'error desconocido'), 'error')
+      alert('Error: ' + (isSupabaseError(err) ? err.message : 'error desconocido'))
     }
   }
 

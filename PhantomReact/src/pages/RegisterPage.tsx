@@ -8,12 +8,13 @@ const FIELDS: Array<{
   type: string
   placeholder: string
   required?: boolean
+  maxLength?: number
 }> = [
   { name: 'nombre', label: 'Nombre completo', type: 'text', placeholder: 'Juan Pérez', required: true },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'tu@email.com', required: true },
   { name: 'password', label: 'Contraseña', type: 'password', placeholder: '••••••••', required: true },
-  { name: 'dni', label: 'DNI', type: 'text', placeholder: '12345678' },
-  { name: 'telefono', label: 'Teléfono', type: 'tel', placeholder: '+51 999 000 000' },
+  { name: 'dni', label: 'DNI', type: 'text', placeholder: '12345678', maxLength: 8 },
+  { name: 'telefono', label: 'Teléfono', type: 'tel', placeholder: '999000000', maxLength: 9 },
   { name: 'direccion', label: 'Dirección', type: 'text', placeholder: 'Av. Lima 123' },
 ]
 
@@ -33,13 +34,14 @@ export default function RegisterPage() {
             <div key={f.name}>
               <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
               <input
-                name={f.name}
-                type={f.type}
-                required={f.required}
-                placeholder={f.placeholder}
-                className="input-field"
-                value={form[f.name]}
-                onChange={e => onChange(f.name, e.target.value)}
+                  name={f.name}
+                  type={f.type}
+                  required={f.required}
+                  placeholder={f.placeholder}
+                  maxLength={f.maxLength}
+                  className="input-field"
+                  value={form[f.name]}
+                  onChange={e => onChange(f.name, e.target.value)}
               />
             </div>
           ))}

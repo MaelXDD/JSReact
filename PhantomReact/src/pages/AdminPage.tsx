@@ -1,7 +1,7 @@
 import { FiPlus, FiEdit2, FiTrash2, FiLoader, FiX } from 'react-icons/fi'
 import { useAdminProducts } from '../hooks/useAdminProducts'
 
-const TABLE_HEADERS = ['ID', 'Nombre', 'Marca', 'Categoría', 'Precio', 'Stock', 'Acciones']
+const TABLE_HEADERS = ['Nombre', 'Marca', 'Categoría', 'Precio', 'Stock', 'Acciones']
 
 function stockBadgeClass(stock: number): string {
   if (stock === 0) return 'bg-red-50 text-red-600'
@@ -52,7 +52,6 @@ export default function AdminPage() {
               <tbody className="divide-y divide-gray-50">
                 {products.map(p => (
                   <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 text-gray-400 font-mono">#{p.id}</td>
                     <td className="px-4 py-3 font-medium text-gray-900 max-w-xs">
                       <div className="flex items-center gap-3">
                         {p.imagen_url && (

@@ -9,6 +9,7 @@ import AdminPage from './pages/AdminPage'
 import RegisterPage from './pages/RegisterPage'
 
 import Navbar from './components/shared/Navbar'
+import Footer from './components/shared/Footer'
 
 function PrivateRoute({ children }: { readonly children: ReactNode }) {
   const { user, loading } = useAuth()
@@ -52,6 +53,8 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {user && <Footer />}
     </div>
   )
 }

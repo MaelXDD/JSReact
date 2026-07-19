@@ -27,7 +27,10 @@ export default function AdminPage() {
           <h1 className="text-2xl font-bold text-gray-900">Panel de administración</h1>
           <p className="text-gray-500 text-sm mt-1">{products.length} productos registrados</p>
         </div>
-        <button onClick={openCreate} className="btn-primary flex items-center gap-2">
+        <button
+            onClick={openCreate}
+            className="flex items-center gap-2 bg-[#ed4245] hover:bg-[#c43638] text-white px-5 py-2.5 rounded-lg font-bold transition-all active:scale-[0.98] shadow-md hover:shadow-lg"
+        >
           <FiPlus /> Nuevo producto
         </button>
       </div>

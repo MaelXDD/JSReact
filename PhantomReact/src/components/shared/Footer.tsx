@@ -11,9 +11,9 @@ export default function Footer() {
                         Tu tienda gamer de confianza en Perú. Especialistas en consolas, videojuegos y accesorios al mejor precio.
                     </p>
                     <div className="flex gap-4 text-xl">
-                        <a href="#" className="hover:text-[#ed4245] transition-colors"><FiFacebook /></a>
-                        <a href="#" className="hover:text-[#ed4245] transition-colors"><FiInstagram /></a>
-                        <a href="#" className="hover:text-[#ed4245] transition-colors"><FiTwitter /></a>
+                        <button type="button" className="bg-transparent border-none p-0 hover:text-[#ed4245] transition-colors"><FiFacebook /></button>
+                        <button type="button" className="bg-transparent border-none p-0 hover:text-[#ed4245] transition-colors"><FiInstagram /></button>
+                        <button type="button" className="bg-transparent border-none p-0 hover:text-[#ed4245] transition-colors"><FiTwitter /></button>
                     </div>
                 </div>
 

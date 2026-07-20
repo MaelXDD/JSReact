@@ -1,10 +1,10 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react'
 import { FiCheckCircle, FiAlertCircle, FiX } from 'react-icons/fi'
 
 type ToastType = 'success' | 'error'
 
 interface Toast {
-    id: number
+    id: string
     message: string
     type: ToastType
 }
@@ -15,23 +15,23 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
-export function ToastProvider({ children }: { children: ReactNode }) {
+export function ToastProvider({ children }: { readonly children: ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([])
 
-    const showToast = useCallback((message: string, type: ToastType = 'error') => {
-        const id = Date.now() + Math.random()
-        setToasts(current => [...current, { id, message, type }])
-        setTimeout(() => {
-            setToasts(current => current.filter(t => t.id !== id))
-        }, 4000)
-    }, [])
-
-    const removeToast = useCallback((id: number) => {
+    const removeToast = useCallback((id: string) => {
         setToasts(current => current.filter(t => t.id !== id))
     }, [])
 
+    const showToast = useCallback((message: string, type: ToastType = 'error') => {
+        const id = crypto.randomUUID()
+        setToasts(current => [...current, { id, message, type }])
+        setTimeout(() => removeToast(id), 4000)
+    }, [removeToast])
+
+    const value = useMemo(() => ({ showToast }), [showToast])
+
     return (
-        <ToastContext.Provider value={{ showToast }}>
+        <ToastContext.Provider value={value}>
             {children}
             <div className="fixed top-4 right-4 z-[100] space-y-2 w-full max-w-sm">
                 {toasts.map(toast => (

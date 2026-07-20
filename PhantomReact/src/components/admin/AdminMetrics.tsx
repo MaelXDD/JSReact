@@ -66,7 +66,6 @@ export default function AdminMetrics({ products }: AdminMetricsProps) {
 
   return (
     <div className="mb-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">Panel de administrador</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <StockBajoCard items={stockBajo} />
         <DestacadosCard items={destacados} />

@@ -1,7 +1,6 @@
 import { FiSearch, FiLoader } from 'react-icons/fi'
 import ProductCard from '../components/client/ProductCard'
 import WelcomeBanner from '../components/client/WelcomeBanner'
-import AdminMetrics from '../components/admin/AdminMetrics'
 import { useStoreCatalog } from '../hooks/useStoreCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import type { Producto } from '../domain/entities'
@@ -33,20 +32,16 @@ function ProductGrid({ loading, displayed }: { readonly loading: boolean; readon
 }
 
 export default function StorePage() {
-  const { categories, search, setSearch, catFilter, setCatFilter, loading, displayed, products } = useStoreCatalog()
-  const { profile, isAdmin } = useAuth()
+  const { categories, search, setSearch, catFilter, setCatFilter, loading, displayed } = useStoreCatalog()
+  const { profile } = useAuth()
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {isAdmin ? (
-        <AdminMetrics products={products} />
-      ) : (
-        <WelcomeBanner
+      <WelcomeBanner
           nombre={profile?.nombre}
           categories={categories}
           onSelectCategory={setCatFilter}
-        />
-      )}
+      />
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Catálogo de productos</h1>

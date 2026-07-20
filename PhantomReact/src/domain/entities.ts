@@ -34,7 +34,6 @@ export interface Producto {
   categorias?: Pick<Categoria, 'nombre'>
 }
 
-/** Payload para crear/editar un producto: todos los campos menos `id` son opcionales. */
 export type ProductoPayload = Partial<Omit<Producto, 'id' | 'categorias'>>
 
 export interface ProductoEtiqueta {
@@ -64,7 +63,6 @@ export interface DetalleVenta {
 
 export type DetalleVentaPayload = Omit<DetalleVenta, 'id'>
 
-/** Item del carrito: un producto con la cantidad seleccionada por el usuario. */
 export interface CartItem extends Producto {
   qty: number
 }

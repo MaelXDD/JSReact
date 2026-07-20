@@ -43,50 +43,71 @@ No existe una interfaz para promover un usuario a administrador. Después de reg
 UPDATE usuarios SET rol = 'ADMIN' WHERE email = 'tu@email.com';
 ```
 
----
-
+```
 ## 3. Estructura del proyecto
 
 ```
-tienda-online/
+PhantomReact/
+├── Imagenes/                       # Imágenes estáticas del catálogo, banners y branding (57 archivos)
 ├── src/
-│   ├── lib/
-│   │   └── supabaseClient.ts       Instancia única del cliente Supabase
-│   ├── domain/
-│   │   └── entities.ts              Definiciones JSDoc (Usuario, Producto, Venta, etc.)
-│   ├── contexts/
-│   │   ├── AuthContext.tsx          Sesión, perfil, rol, login/logout
-│   │   └── CartContext.tsx          Estado global del carrito (useReducer)
-│   │   └── ToastContext.tsx         
-│   ├── repositories/                Acceso directo a Supabase (una tabla por archivo)
-│   │   ├── productosRepository.ts
-│   │   ├── categoriasRepository.ts
-│   │   ├── ventasRepository.ts
-│   │   └── detalleVentasRepository.ts
-│   ├── services/                    Reglas de negocio sobre los repositorios
-│   │   ├── productoService.ts
-│   │   ├── categoriaService.ts
-│   │   ├── ventaService.ts
-│   │   └── usuarioService.ts
-│   ├── pages/
-│   │   ├── LoginPage.tsx
-│   │   ├── RegisterPage.tsx
-│   │   ├── StorePage.tsx            Catálogo con búsqueda y filtro (vista cliente)
-│   │   ├── CartPage.tsx             Carrito y checkout
-│   │   └── AdminPage.tsx            CRUD de productos (vista administrador)
 │   ├── components/
-│   │   ├── shared/Navbar.tsx
-│   │   ├── shared/Footer.tsx
-│   │   ├── client/ProductCard.tsx
-│   │   └── common/SmartImage.tsx    Imagen con placeholder y manejo de error
-│   ├── App.tsx                      Rutas protegidas por sesión y rol
-│   ├── main.tsx                     Providers (Router, Auth, Cart)
-│   └── index.css                    Tailwind y clases utilitarias (.btn-primary, .card, etc.)
-├── Imagenes/                        Recursos estáticos de productos usados como demostración
-├── .env.local                       Credenciales de Supabase (ver nota de la sección 1)
-├── vite.config.ts
+│   │   ├── admin/
+│   │   │   └── AdminMetrics.tsx    # Métricas/indicadores del panel de administración
+│   │   ├── client/
+│   │   │   ├── ProductCard.tsx     # Tarjeta de producto en el catálogo
+│   │   │   └── WelcomeBanner.tsx   # Banner de bienvenida en la tienda
+│   │   ├── common/
+│   │   │   └── SmartImage.tsx      # Componente de imagen con manejo de fallback/carga
+│   │   └── shared/
+│   │       ├── Footer.tsx          # Pie de página común
+│   │       └── Navbar.tsx          # Barra de navegación común
+│   ├── contexts/
+│   │   ├── AuthContext.tsx         # Estado global de autenticación y rol de usuario
+│   │   ├── CartContext.tsx         # Estado global del carrito de compras
+│   │   └── ToastContext.tsx        # Notificaciones tipo toast
+│   ├── domain/
+│   │   └── entities.ts             # Tipos/entidades del dominio (Producto, Usuario, Venta, etc.)
+│   ├── hooks/
+│   │   ├── useAddToCart.ts         # Lógica para agregar productos al carrito
+│   │   ├── useAdminProducts.ts     # CRUD de productos para el panel admin
+│   │   ├── useCheckout.ts          # Lógica del proceso de checkout
+│   │   ├── useDashboardStats.ts    # Estadísticas del dashboard admin
+│   │   ├── useLoginForm.ts         # Lógica del formulario de inicio de sesión
+│   │   ├── useLogout.ts            # Lógica de cierre de sesión
+│   │   ├── useRegisterForm.ts      # Lógica del formulario de registro
+│   │   └── useStoreCatalog.ts      # Lógica de listado/búsqueda/filtro del catálogo
+│   ├── lib/
+│   │   └── supabaseClient.ts       # Instancia y configuración del cliente de Supabase
+│   ├── pages/
+│   │   ├── AdminPage.tsx           # Panel de administración (CRUD de productos)
+│   │   ├── CartPage.tsx            # Carrito y checkout
+│   │   ├── LoginPage.tsx           # Inicio de sesión
+│   │   ├── RegisterPage.tsx        # Registro de usuarios
+│   │   └── StorePage.tsx           # Catálogo de productos
+│   ├── repositories/
+│   │   ├── categoriasRepository.ts     # Acceso a datos de la tabla `categorias`
+│   │   ├── detalleVentasRepository.ts  # Acceso a datos de la tabla `detalle_ventas`
+│   │   ├── productosRepository.ts      # Acceso a datos de la tabla `productos`
+│   │   └── ventasRepository.ts         # Acceso a datos de la tabla `ventas`
+│   ├── services/
+│   │   ├── categoriaService.ts     # Lógica de negocio sobre categorías
+│   │   ├── productoService.ts      # Lógica de negocio sobre productos
+│   │   ├── usuarioService.ts       # Lógica de negocio sobre usuarios
+│   │   └── ventaService.ts         # Lógica de negocio sobre ventas
+│   ├── utils/
+│   │   └── isSupabaseError.ts      # Helper para detectar errores de Supabase
+│   ├── App.tsx                     # Definición de rutas y componentes de protección (PrivateRoute/AdminRoute)
+│   ├── index.css                   # Estilos globales (Tailwind)
+│   ├── main.tsx                    # Punto de entrada de la aplicación
+│   └── vite-env.d.ts                # Tipado de variables de entorno de Vite
+├── .env.local                      # Credenciales de Supabase (excluido de git)
+├── .gitignore
+├── index.html
+├── package.json
+├── postcss.config.js
 ├── tailwind.config.js
-└── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ---
